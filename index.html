@@ -1,0 +1,45 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="UTF-8"/>
+<script>
+var renderer = null;
+var canvas = null;
+var gl = null;
+ 
+function main()
+{
+	canvas = document.getElementById("canvas");
+	gl = getGLContext(canvas);
+	//registerEvents();
+    renderer = new RenderHub(canvas.width,canvas.height);
+    renderer.createDebugResources();
+    renderer.run();
+}
+</script>
+
+<!--
+   same as <link rel="stylesheet" href="css/style.css">
+ -->
+<style>
+ @import url(css/style.css);
+</style>
+</head>
+<body onLoad="main()">
+    <center>
+        <canvas id="canvas" width="1600" height="900" style="border: 1px solid #000000; background: white;"> </canvas>
+    </center>
+    <!--
+    load then scripts after the whole document is loaded
+    -->
+    <script src="gl-matrix.js"></script>
+	<script src="webgl-utils.js"></script>
+    <script src="renderHub.js"></script>
+	<script src="mesh.js"></script>
+	<script src="framebuffer.js"></script>
+    <script src="texture2d.js"></script>
+    <script src="resourceLoader.js"></script>
+    <script src="skySphere.js"></script>
+    <script src="camera.js"></script>
+</body>
+</html>
