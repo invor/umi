@@ -21,12 +21,17 @@ function RenderHub(window_width,window_height)
 	startPosition = [0.0,0.0,2.0];
 	this.camera = new Camera(startPosition,neutralRotation,16.0/9.0,60.0*(9.0/16.0));
 	
-	this.sky = new SkySphere();
+	this.sky = new SkyDome();
 	
 	// for debugging
 	this.debug_prgm = null;
 	this.debug_mesh = new Mesh();
 	this.debug_sphere = new Mesh();
+}
+
+RenderHub.prototype.loadScene=function()
+{
+	this.sky.createResources();
 }
 
 RenderHub.prototype.createDebugResources=function()
@@ -87,7 +92,13 @@ RenderHub.prototype.renderDebug=function()
 
 RenderHub.prototype.renderSky=function()
 {
+	//TODO render to special sky framebuffer and merge in postprocessing?
 	
+	gl.clearColor(0.0,0.0,0.0,1.0);
+	gl.clear(gl.COLOR_BUFFER_BIT|gl.DEPTH_BUFFER_BIT);
+	gl.viewport(0,0,canvas.width,canvas.height);
+	
+	this.sky.render(this.camera);
 }
 
 RenderHub.prototype.run=function()
@@ -96,6 +107,7 @@ RenderHub.prototype.run=function()
 	(function updateFrame(){
 		requestAnimFrame(updateFrame);
 		//TODO call render methods
-		self.renderDebug();
+		//self.renderDebug();
+		self.renderSky();
 	})();
 }
