@@ -2,8 +2,20 @@ function SkyDome()
 {
 	this.sky_prgm = null;
 	this.fullscreenQuad = new Mesh();
-	this.skyGradient_tx2D = null;
+	this.skyGradient_tx2D = new Texture2D("sky",gl.RGBA,1,1,gl.RGBA,gl.UNSIGNED_BYTE,null);
+	
+	this.skyGradient_img = new Image();
+	this.skyGradient_img.onload = function() { handleTextureLoaded(renderHub.sky.skyGradient_img,renderHub.sky.skyGradient_tx2D); }
+  	this.skyGradient_img.src = "resources/sky.png";
+	
+	//TODO remove from here
+	this.tod = 0.0;
 }
+
+function handleTextureLoaded(image, texture)
+{
+	texture.loadImage(image);
+} 
 
 SkyDome.prototype.createResources = function()
 {
@@ -45,7 +57,18 @@ SkyDome.prototype.render=function(camera)
 	var right_vector = camera.getRightVector();
 	var up_vector = camera.getUpVector();
 	
-	//TODO scale up and right vector to match virtual image plane size
+	// scale up- and right-vector to match virtual image plane size
+	var aspect_ratio = camera.aspect_ratio;
+	
+	var up_scaling = Math.tan( ((camera.fov*3.14)/180.0) / 2.0);
+	var right_scaling = up_scaling * aspect_ratio;
+	
+	up_vector[0] = up_vector[0]*up_scaling;
+	up_vector[1] = up_vector[1]*up_scaling;
+	up_vector[2] = up_vector[2]*up_scaling;
+	right_vector[0] = right_vector[0]*right_scaling;
+	right_vector[1] = right_vector[1]*right_scaling;
+	right_vector[2] = right_vector[2]*right_scaling;
 	
 	var camera_vectors = mat3.create();
 	camera_vectors = [front_vector[0], front_vector[1], front_vector[2],
@@ -53,6 +76,16 @@ SkyDome.prototype.render=function(camera)
 						right_vector[0], right_vector[1], right_vector[2]];
 	
 	gl.uniformMatrix3fv(gl.getUniformLocation(this.sky_prgm, "camera_vectors"),false,camera_vectors);
+	
+	gl.uniform1f(gl.getUniformLocation(this.sky_prgm, "time_of_day"),this.tod);
+	this.tod += 0.005;
+	if(this.tod > 24.0)
+		this.tod = 0.0;
+		
+		
+	gl.activeTexture(gl.TEXTURE0);
+	this.skyGradient_tx2D.bindTexture();
+	gl.uniform1i(gl.getUniformLocation(this.sky_prgm, "sky_tx2D"),0);
 	
 	this.fullscreenQuad.setVertexAttribPointer(0,3,gl.FLOAT,false,5*4,0);
 	this.fullscreenQuad.setVertexAttribPointer(1,2,gl.FLOAT,false,5*4,3*4);

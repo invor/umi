@@ -60,7 +60,7 @@ function onMouseMove(evt)
 		//TODO move camera
 		var rot_angle;
 		
-		rot_angle = -dx*(90.0/canvas.width);
+		rot_angle = dx*(180.0/canvas.width);
 		renderHub.camera.rotate((rot_angle*3.14)/180.0,[0.0,1.0,0.0]);
 		
 		rot_angle = -dy*(90.0/canvas.height);
