@@ -53,12 +53,13 @@ float computeSunHaloIntensity(in vec3 fragment_direction, in vec3 sun_direction)
 {
 	vec2 sun_angles = getSkyDomeAngles(sun_direction);
 	vec2 fragment_angles = getSkyDomeAngles(fragment_direction);
+	float scaled_phi = (1.0-exp(-abs(2.5* fragment_angles.y )));
 	
-	float sunHaloFactor = pow(1.0 - ( (dot(sun_direction,fragment_direction)*0.5) + 0.5),0.7);
-    float sunHaloPoly = (1.0 - pow(sunHaloFactor,0.15+(sun_angles.y)*0.2)) * (1.0 - fragment_angles.y/acos(0.0));
-    float sunHaloExp = exp(-pow(sunHaloFactor,2.0)/(2.0*pow(0.02,3.0)));
+	float sunHaloFactor = pow(1.0 - ( (0.00025+dot(sun_direction,fragment_direction)*0.5) + 0.5),0.7);
+    float sunHaloPoly = (1.0 - pow(sunHaloFactor,0.125+(sun_angles.y)*0.2)) * (1.0 - scaled_phi);
+    float sunHaloExp = exp(-pow(sunHaloFactor,2.0)/(2.0*pow(0.03,3.0)));
 	
-	return mix(sunHaloPoly,sunHaloExp,pow((sun_angles.y/acos(0.0)),0.6));
+	return mix(sunHaloPoly,sunHaloExp,0.3 + 0.7 * pow((sun_angles.y/PI),0.6));
 }
 
 void main()
@@ -73,26 +74,28 @@ void main()
 		return;
 	}
 	
+	float ToD = time_of_day;
+	
 	// Compute angles of sky dome sphere parameterisation
 	vec2 angles = getSkyDomeAngles(direction);
 	
 	// Compute sun postion from time of day
 	vec3 sun_direction = normalize(vec3(0.0,
-										sin( (time_of_day/24.0)*2.0*PI - (PI/2.0)),
-										cos( (time_of_day/24.0)*2.0*PI - (3.0*PI/2.0))));
+										sin( (ToD/24.0)*2.0*PI - (PI/2.0)),
+										cos( (ToD/24.0)*2.0*PI - (3.0*PI/2.0))));
 	vec3 sun_color = vec3(1.0,1.0,0.3);
 	vec3 sun_disc = sun_color * ( dot(sun_direction,direction) < 0.9995 ? 0.0 : 1.0);
 	float sun_halo_intensity = computeSunHaloIntensity(direction,sun_direction);
 	vec3 sun_halo = sun_color * sun_halo_intensity;
 	
 	// Compute sky color
-	vec3 sky_color = computeSkyColor(angles.y,time_of_day).xyz;
+	vec3 sky_color = computeSkyColor(angles.y,ToD).xyz;
 	
 	vec3 outColor = sky_color + sun_disc + sun_halo;
 
 	gl_FragColor = vec4(outColor,1.0);
 	
-	gl_FragColor = vec4(sun_halo+sky_color,1.0);
+	//gl_FragColor = vec4(sun_halo+sun_disc,1.0);
 	
 	//gl_FragColor = texture2D(sky_tx2D,uv);
 }
