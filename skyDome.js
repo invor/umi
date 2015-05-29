@@ -2,24 +2,18 @@ function SkyDome()
 {
 	this.sky_prgm = null;
 	this.fullscreenQuad = new Mesh();
-	this.skyGradient_tx2D = new Texture2D("sky",gl.RGBA,1,1,gl.RGBA,gl.UNSIGNED_BYTE,null);
-	
-	this.skyGradient_img = new Image();
-	this.skyGradient_img.onload = function() { handleTextureLoaded(renderHub.sky.skyGradient_img,renderHub.sky.skyGradient_tx2D); }
-  	this.skyGradient_img.src = "resources/sky.png";
+	this.skyGradient_tx2D = new Texture2D("sky",gl.RGBA,10,3,gl.RGBA,gl.UNSIGNED_BYTE,null);
 	
 	//TODO remove from here
 	this.tod = 0.0;
 }
 
-function handleTextureLoaded(image, texture)
-{
-	texture.loadImage(image);
-} 
-
 SkyDome.prototype.createResources = function()
 {
-	// Load shader program for debugging
+	// Load sky base texture
+	loadTextureFromImageFile(this.skyGradient_tx2D,"resources/sky.png");
+	
+	// Load shader program for sky
     var	vShader = loadShader(gl.VERTEX_SHADER,"./shaders/sky_v.glsl");
 	var fShader = loadShader(gl.FRAGMENT_SHADER,"./shaders/sky_f.glsl");
 	
@@ -60,7 +54,7 @@ SkyDome.prototype.render=function(camera)
 	// scale up- and right-vector to match virtual image plane size
 	var aspect_ratio = camera.aspect_ratio;
 	
-	var up_scaling = Math.tan( ((camera.fov*3.14)/180.0) / 2.0);
+	var up_scaling = Math.tan( camera.fov / 2.0);
 	var right_scaling = up_scaling * aspect_ratio;
 	
 	up_vector[0] = up_vector[0]*up_scaling;

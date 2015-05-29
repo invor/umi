@@ -1,0 +1,6 @@
+* add basic game state representation
+* add basic game logic (i.e. update of game state)
+* add keyboard input
+* add ocean implementation
+* add island/terrain implementation based on that one paper from France
+* add 3d mesh (glTF?) loading functionality

@@ -22,6 +22,7 @@ function RenderHub(window_width,window_height)
 	this.camera = new Camera(startPosition,neutralRotation,16.0/9.0,60.0*(9.0/16.0));
 	
 	this.sky = new SkyDome();
+	this.ocean = new Ocean();
 	
 	// for debugging
 	this.debug_prgm = null;
@@ -32,6 +33,7 @@ function RenderHub(window_width,window_height)
 RenderHub.prototype.loadScene=function()
 {
 	this.sky.createResources();
+	this.ocean.createResources();
 }
 
 RenderHub.prototype.createDebugResources=function()
@@ -101,6 +103,21 @@ RenderHub.prototype.renderSky=function()
 	this.sky.render(this.camera);
 }
 
+RenderHub.prototype.renderOcean=function()
+{
+	//TODO render to special ocean framebuffer and merge in postprocessing?
+	this.ocean.render(this.camera);
+}
+
+RenderHub.prototype.render = function()
+{
+	this.renderSky();
+	this.renderOcean();
+	
+	//this.renderDebug();
+}
+
+/*
 RenderHub.prototype.run=function()
 {
 	var self = this;
@@ -111,3 +128,4 @@ RenderHub.prototype.run=function()
 		self.renderSky();
 	})();
 }
+*/

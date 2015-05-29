@@ -10,13 +10,24 @@ var gl = null;
  
 function main()
 {
+    // Initialization Phase
 	canvas = document.getElementById("canvas");
 	gl = getGLContext(canvas);
 	registerEvents();
     renderHub = new RenderHub(canvas.width,canvas.height);
     renderHub.createDebugResources();
     renderHub.loadScene();
-    renderHub.run();
+    
+    // Main Loop
+    (function update(){
+		requestAnimFrame(update);
+        
+		//TODO update game logic
+		
+        // render new frame
+		renderHub.render();
+	})();
+    
 }
 </script>
 
@@ -44,5 +55,6 @@ function main()
     <script src="skyDome.js"></script>
     <script src="camera.js"></script>
     <script src="controls.js"></script>
+    <script src="ocean.js"></script>
 </body>
 </html>

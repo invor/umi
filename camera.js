@@ -7,14 +7,10 @@ function Camera(position,orientation,aspect_ratio,fov)
 	
 	var translation = mat4.create();
 	var rotation = mat4.create();
-	this.transformation = mat4.create();
-	
-	mat4.translate(translation,translation,position);
-	mat4.fromQuat(rotation,orientation);
-	mat4.multiply(this.transformation,translation,rotation);
 	
 	this.aspect_ratio = aspect_ratio;
-	this.fov = fov;
+	//convert to radians for internal calculations
+	this.fov = (fov * Math.PI)/180.0;
 	this.near = 0.001;
 	this.far = 1000.0;
 }
@@ -22,7 +18,6 @@ function Camera(position,orientation,aspect_ratio,fov)
 Camera.prototype.translate = function(tVec)
 {
 	this.position = this.position + tVec;
-	mat4.translate(this.transformation,this.transformation,tVec);
 }
 
 /**
@@ -35,8 +30,6 @@ Camera.prototype.rotate = function (angle, axis)
 	var tmp = quat.create();
 	quat.setAxisAngle(tmp, axis, angle) 
 	quat.multiply(this.orientation,tmp,this.orientation);
-	
-	mat4.rotate(this.transformation,this.transformation,angle,axis);
 }
 
 Camera.prototype.getFrontVector = function()
@@ -72,7 +65,8 @@ Camera.prototype.getRightVector = function()
 Camera.prototype.computeViewMatrix = function(view_matrix)
 {
 	mat4.identity(view_matrix);
-	mat4.invert(view_matrix,this.transformation);
+	mat4.fromRotationTranslation(view_matrix, this.orientation, this.position);
+	mat4.invert(view_matrix,view_matrix);
 }
 
 Camera.prototype.computeProjectionMatrix = function(projection_matrix)

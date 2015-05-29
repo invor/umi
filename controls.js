@@ -71,6 +71,11 @@ function onMouseMove(evt)
 	}
 }
 
+function onKeyDown(evt)
+{
+	
+}
+
 function registerEvents(){
 	
 	canvas.addEventListener('mousedown',onMouseClick,false);
@@ -78,5 +83,5 @@ function registerEvents(){
 	canvas.addEventListener('mousemove',onMouseMove,false);
 	canvas.addEventListener('DOMMouseScroll',onMouseWheel,false);
 	canvas.addEventListener('mousewheel',onMouseWheel,false);
-
+	//TODO add event listener for keyboard
 }

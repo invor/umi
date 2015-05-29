@@ -39,6 +39,7 @@ vec2 getSkyDomeAngles(in vec3 direction)
 vec4 computeSkyColor(in float view_phi, in float time_of_day)
 {
 	float scaled_phi = (1.0-exp(-abs(2.5*view_phi)));
+	scaled_phi = (1.0/6.0) + view_phi*(4.0/6.0);
 	
 	vec4 sky_color = texture2D(sky_tx2D, vec2(time_of_day/24.0,scaled_phi) );
 	

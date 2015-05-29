@@ -2,10 +2,10 @@
 
 function GLSLProgram()
 {
-	this.handle = null;
+	this.handle = gl.createProgram();
 }
 
 GLSLProgram.prototype.use()
 {
-	
+	gl.useProgram(this.handle);
 }

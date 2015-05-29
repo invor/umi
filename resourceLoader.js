@@ -32,3 +32,10 @@ loadShader = function(type, path)
 
     return shader;
 }
+
+loadTextureFromImageFile = function(texture, path)
+{
+	var img = new Image();
+	img.onload = function () { texture.loadImage(img); }
+	img.src = path;
+}
