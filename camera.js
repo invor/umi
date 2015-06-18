@@ -17,7 +17,7 @@ function Camera(position,orientation,aspect_ratio,fov)
 
 Camera.prototype.translate = function(tVec)
 {
-	this.position = this.position + tVec;
+	vec3.add(this.position,this.position,tVec);
 }
 
 /**

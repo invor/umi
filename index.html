@@ -13,6 +13,12 @@ function main()
     // Initialization Phase
 	canvas = document.getElementById("canvas");
 	gl = getGLContext(canvas);
+    
+    var uintIndex_ext = gl.getExtension("OES_element_index_uint");
+    
+    if(uintIndex_ext)
+     console.log("Got extension");
+    
 	registerEvents();
     renderHub = new RenderHub(canvas.width,canvas.height);
     renderHub.createDebugResources();
@@ -40,7 +46,7 @@ function main()
 </head>
 <body onLoad="main()">
     <center>
-        <canvas id="canvas" width="1600" height="900" style="border: 1px solid #000000; background: white;"> </canvas>
+        <canvas id="canvas" width="1600" height="900" tabindex='1' style="border: 1px solid #000000; background: white;"> </canvas>
     </center>
     <!--
     load then scripts after the whole document is loaded
@@ -56,5 +62,6 @@ function main()
     <script src="camera.js"></script>
     <script src="controls.js"></script>
     <script src="ocean.js"></script>
+    <script src="terrain.js"></script>
 </body>
 </html>

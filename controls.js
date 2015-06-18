@@ -73,7 +73,36 @@ function onMouseMove(evt)
 
 function onKeyDown(evt)
 {
+	console.log("Key pressed");
 	
+	var tVec = vec3.create();
+	
+	switch (evt.keyCode) {
+    case 65: // a
+		tVec = renderHub.camera.getRightVector();
+		vec3.scale(tVec,tVec,-0.1);
+	 	renderHub.camera.translate(tVec);
+    break;
+	
+    case 87: // w
+    	tVec = renderHub.camera.getFrontVector();
+		vec3.scale(tVec,tVec,0.1);
+	 	renderHub.camera.translate(tVec);  
+    break;
+
+    case 68: // d
+		tVec = renderHub.camera.getRightVector();
+		vec3.scale(tVec,tVec,0.1);
+	 	renderHub.camera.translate(tVec);
+    break;
+
+    case 83: // s
+    	tVec = renderHub.camera.getFrontVector();
+		vec3.scale(tVec,tVec,-0.1);
+	 	renderHub.camera.translate(tVec);
+    break;
+  }
+  
 }
 
 function registerEvents(){
@@ -84,4 +113,5 @@ function registerEvents(){
 	canvas.addEventListener('DOMMouseScroll',onMouseWheel,false);
 	canvas.addEventListener('mousewheel',onMouseWheel,false);
 	//TODO add event listener for keyboard
+	canvas.addEventListener('keydown',onKeyDown,false);
 }

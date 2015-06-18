@@ -24,6 +24,9 @@ function RenderHub(window_width,window_height)
 	this.sky = new SkyDome();
 	this.ocean = new Ocean();
 	
+	// terrain debugging
+	this.terrain = new Terrain(50.0,50.0,512,512);
+	
 	// for debugging
 	this.debug_prgm = null;
 	this.debug_mesh = new Mesh();
@@ -34,6 +37,7 @@ RenderHub.prototype.loadScene=function()
 {
 	this.sky.createResources();
 	this.ocean.createResources();
+	this.terrain.createResources();
 }
 
 RenderHub.prototype.createDebugResources=function()
@@ -109,10 +113,19 @@ RenderHub.prototype.renderOcean=function()
 	this.ocean.render(this.camera);
 }
 
+RenderHub.prototype.renderTerrain=function()
+{
+	gl.clear(gl.DEPTH_BUFFER_BIT);
+	gl.enable(gl.DEPTH_TEST);
+	
+	this.terrain.render(this.camera);
+}
+
 RenderHub.prototype.render = function()
 {
 	this.renderSky();
-	this.renderOcean();
+	//this.renderOcean();
+	this.renderTerrain();
 	
 	//this.renderDebug();
 }
